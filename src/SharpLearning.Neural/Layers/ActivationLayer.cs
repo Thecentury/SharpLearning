@@ -16,33 +16,35 @@ namespace SharpLearning.Neural.Layers
         /// The weights outputtet by the layer.
         /// </summary>
         public Matrix<float> OutputActivations;
+
         Matrix<float> m_inputActivations;
 
         /// <summary>
         /// Holds the derivative for backward propagation.
         /// </summary>
         public Matrix<float> ActivationDerivative;
+
         Matrix<float> m_delta;
 
         IActivation m_activation;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public int Width { get; set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public int Height { get; set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public int Depth { get; set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public Activation ActivationFunc { get; set; }
 
@@ -53,21 +55,11 @@ namespace SharpLearning.Neural.Layers
         public ActivationLayer(Activation activation)
         {
             ActivationFunc = activation;
-
-            switch (activation)
-            {
-                case Activation.Undefined:
-                    throw new ArgumentException("ActivationLayer must have a defined activation function. Provided with: " + activation);
-                case Activation.Relu:
-                    m_activation = new ReluActivation();
-                    break;
-                default:
-                    throw new ArgumentException("Unsupported activation type: " + activation);
-            }
+            m_activation = ActivationFactory.CreateActivation(activation);
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="delta"></param>
         /// <returns></returns>
@@ -84,7 +76,7 @@ namespace SharpLearning.Neural.Layers
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
@@ -99,7 +91,7 @@ namespace SharpLearning.Neural.Layers
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="inputWidth"></param>
         /// <param name="inputHeight"></param>
@@ -143,7 +135,7 @@ namespace SharpLearning.Neural.Layers
             copy.Depth = this.Depth;
 
             var fanOut = Width * Height * Depth;
-            
+
             copy.OutputActivations = Matrix<float>.Build.Dense(batchSize, fanOut);
             copy.ActivationDerivative = Matrix<float>.Build.Dense(batchSize, fanOut);
 
